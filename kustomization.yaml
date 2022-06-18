@@ -1,0 +1,43 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ./serving-core.yaml
+- ./kourier.yaml
+- ./hello.yaml
+
+patchesStrategicMerge:
+- |-
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: kourier
+    namespace: kourier-system
+  spec:
+    ports:
+      - name: http2
+        port: 80
+        protocol: TCP
+        targetPort: 8080
+        nodePort: 31080
+      - name: https
+        port: 443
+        protocol: TCP
+        targetPort: 8443
+        nodePort: 31443
+    type: NodePort
+- |-
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: config-network
+    namespace: knative-serving
+  data:
+      "ingress.class": "kourier.ingress.networking.knative.dev"
+- |-
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: config-domain
+    namespace: knative-serving
+  data:
+    "127.0.0.1.nip.io": ""
