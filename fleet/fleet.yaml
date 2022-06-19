@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foobar
+  labels:
+    gatekeeper: foobar
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foefum
+  labels:
+    gatekeeper: foefum
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: foobar
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: foefum
+  labels:
+    app.kubernetes.io/name: foefum
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80

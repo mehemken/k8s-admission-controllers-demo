@@ -7,5 +7,7 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    namespaces:
+      - "foobar"
   parameters:
     labels: ["gatekeeper"]
